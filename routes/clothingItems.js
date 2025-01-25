@@ -29,4 +29,4 @@ router.put("/:itemId/likes", likeItem);
 // Unlike an item by ID
 router.delete("/:itemId/likes", dislikeItem);
 
-router.module.exports = router;
+module.exports = router;
