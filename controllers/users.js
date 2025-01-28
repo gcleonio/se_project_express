@@ -1,6 +1,7 @@
 const User = require("../models/user");
+const { BAD_REQUEST, NOT_FOUND, DEFAULT } = require("../utils/errors"); // Import the error codes
 
-// GET /users — returns all users
+// route handler to returns all users
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => {
@@ -8,11 +9,13 @@ const getUsers = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      return res.status(500).send({ message: err.message });
+      return res
+        .status(DEFAULT)
+        .send({ message: "An error has occured on the server" });
     });
 };
 
-// POST /users — creates a new user
+// route handler to create a new user
 const createUser = (req, res) => {
   const { name, avatar } = req.body;
   User.create({ name, avatar })
@@ -20,13 +23,15 @@ const createUser = (req, res) => {
     .catch((err) => {
       console.error(err); // all catch blocks should log the error
       if (err.name === "ValidationError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(BAD_REQUEST).send({ message: "Invalid ID provided" });
       }
-      return res.status(500).send({ message: err.message });
+      return res
+        .status(DEFAULT)
+        .send({ message: "An error has occured on the server" });
     });
 };
 
-// GET /users/:userId - returns a user by _id
+// route handler to return a user by _id
 const getUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
@@ -35,12 +40,14 @@ const getUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: err.message });
+        return res.status(NOT_FOUND).send({ message: "User not found" });
       }
       if (err.name === "CastError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(BAD_REQUEST).send({ message: "Invalid ID" });
       }
-      return res.status(500).send({ message: err.message });
+      return res
+        .status(DEFAULT)
+        .send({ message: "An error has occured on the server" });
     });
 };
 
