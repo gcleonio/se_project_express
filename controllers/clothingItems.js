@@ -24,7 +24,14 @@ const createItem = (req, res) => {
     .catch((e) => {
       // if not successful, send an error message
       console.error(e); // log the error
-      res.status(DEFAULT).send({ message: "Error from createItem" });
+      if (e.name === "ValidationError") {
+        return res
+          .status(BAD_REQUEST)
+          .send({ message: "Invalid data provided" }); // Send the 400 error
+      }
+      return res
+        .status(DEFAULT)
+        .send({ message: "An error has occured on the server" });
     });
 };
 
@@ -34,7 +41,9 @@ const getItems = (req, res) => {
     .then((items) => res.status(200).send(items))
     .catch((e) => {
       console.error(e);
-      res.status(DEFAULT).send({ message: "Error from getItems" });
+      res
+        .status(DEFAULT)
+        .send({ message: "An error has occured on the server" });
     });
 };
 
