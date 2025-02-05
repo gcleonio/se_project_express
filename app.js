@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const mainRouter = require("./routes/index");
 
 const app = express();
@@ -13,13 +14,17 @@ mongoose
   .catch(console.error);
 
 app.use(express.json()); // Needed to parse the body, and place before calling routes
+
 // app.use() middleware should come before the app.use() of the routes
-app.use((req, res, next) => {
-  req.user = {
-    _id: "6792cca476b1283ee40159bf",
-  };
-  next();
-});
+
+// // Remove the hard-coded user
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: "6792cca476b1283ee40159bf",
+//   };
+//   next();
+// });
+app.use(cors());
 app.use("/", mainRouter);
 
 app.listen(PORT, () => {

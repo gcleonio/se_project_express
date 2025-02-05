@@ -1,5 +1,10 @@
 const ClothingItems = require("../models/clothingItems"); // Import the ClothingItems model
-const { BAD_REQUEST, NOT_FOUND, DEFAULT } = require("../utils/errors"); // Import the error codes
+const {
+  BAD_REQUEST,
+  NOT_FOUND,
+  DEFAULT,
+  FORBIDDEN,
+} = require("../utils/errors"); // Import the error codes
 
 // route handler to create a new item
 const createItem = (req, res) => {
@@ -49,15 +54,24 @@ const getItems = (req, res) => {
 
 // route handler to delete an item
 const deleteItem = (req, res) => {
-  const { itemId } = req.params;
+  const { itemId } = req.params; // Get the item ID from the request parameters
+  const owner = req.user._id; // Get the owner ID from the request user
 
-  console.log(itemId);
-  ClothingItems.findByIdAndDelete(itemId)
-    .orFail()
+  ClothingItems.findById(itemId)
     .then((item) => {
-      res
-        .status(200)
-        .send({ message: "Item deleted successfully", data: item });
+      console.log(item);
+      if (String(item.owner) !== owner) {
+        // Check if the owner of the item matches the user making the request
+        return res
+          .status(FORBIDDEN)
+          .send({ message: "You are not authorized to delete the item" });
+      }
+      return item
+        .deleteOne() // If the owner matches, delete the item
+        .then(() =>
+          // Send a success message
+          res.send({ message: "Item deleted", data: item })
+        );
     })
     .catch((e) => {
       console.error(e);
