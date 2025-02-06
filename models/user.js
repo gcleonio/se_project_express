@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcrypt"); // Import bcrypt for password hashing
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true, minlength: 2, maxlength: 30 },
@@ -39,12 +40,16 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
     .select("+password")
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error("Incorrect email or password"));
+        const error = new Error("Incorrect email or password");
+        error.name = "UnauthorizedError";
+        return Promise.reject(error); // reject the promise with an error if the user is not found
       }
       // if the user is found, compare the provided password with the stored hashed password using bcrypt.compare
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
-          return Promise.reject(new Error("Incorrect email or password"));
+          const error = new Error("Incorrect email or password");
+          error.name = "UnauthorizedError";
+          return Promise.reject(error); // reject the promise with an error if the passwords do not match
         }
         // if the passwords match, resolve the promise with the user object
         return user;

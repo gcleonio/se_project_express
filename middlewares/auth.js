@@ -25,7 +25,7 @@ function auth(req, res, next) {
 
   req.user = payload; // Add the payload to the request object
 
-  next(); // Pass control to the next middleware function
+  return next(); // Pass control to the next middleware function and return
 }
 
 module.exports = auth;

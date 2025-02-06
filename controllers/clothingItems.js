@@ -43,7 +43,7 @@ const createItem = (req, res) => {
 // route handler to get all items
 const getItems = (req, res) => {
   ClothingItems.find({})
-    .then((items) => res.status(200).send(items))
+    .then((items) => res.send(items))
     .catch((e) => {
       console.error(e);
       res

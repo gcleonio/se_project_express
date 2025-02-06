@@ -29,7 +29,7 @@ const { JWT_SECRET } = require("../utils/config"); // Import the JWT secret
 
 // route handler to create a new user
 const createUser = (req, res) => {
-  const { name, avatar, email, password } = req.body;
+  const { name, avatar, email } = req.body;
   bcrypt
     .hash(req.body.password, 12) // hash the password
     .then((hash) => User.create({ name, avatar, email, password: hash })) // create the user with the hashed password
@@ -80,10 +80,10 @@ const login = (req, res) => {
 // route handler to find the current user
 const getCurrentUser = (req, res) => {
   // const { userId } = req.params;
-  const userID = req.user._id; // Instead of pulling the ID from req.params, access it from the req.user object that is set in the auth middleware
+  const userId = req.user._id; // Instead of pulling the ID from req.params, access it from the req.user object that is set in the auth middleware
   User.findById(userId)
     .orFail() // must before .then()
-    .then((user) => res.status(200).send(user))
+    .then((user) => res.send(user))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
@@ -107,7 +107,7 @@ const updateProfile = (req, res) => {
     { name, avatar },
     { new: true, runValidators: true } // return the updated document and enforce validation
   )
-    .then((user) => res.status(200).send({ data: user })) // handle success
+    .then((user) => res.send({ data: user })) // handle success
     .catch((err) => {
       // handle rejected state
       console.error(err);
