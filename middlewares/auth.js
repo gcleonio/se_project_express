@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 
-const { JWT_SECRET } = require("../utils/config"); // Import the JWT secret
+const { JWT_SECRET } = require("../utils/config");
 
-const { UNAUTHORIZED } = require("../utils/errors"); // Import the error codes
+const { UNAUTHORIZED } = require("../utils/errors");
 
 function auth(req, res, next) {
   const { authorization } = req.headers; // Get the authorization header from the request

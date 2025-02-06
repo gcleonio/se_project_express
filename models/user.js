@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
+
 const validator = require("validator");
+
 const bcrypt = require("bcrypt"); // Import bcrypt for password hashing
 
 const userSchema = new mongoose.Schema({
@@ -13,22 +15,22 @@ const userSchema = new mongoose.Schema({
       },
       message: "You must enter a valid URL",
     },
-    email: {
-      type: String,
-      required: [true, "The email field is required."],
-      unique: true,
-      validate: {
-        validator(value) {
-          return validator.isEmail(value);
-        },
-        message: "You must enter a valid email",
+  },
+  email: {
+    type: String,
+    required: [true, "The email field is required."],
+    unique: true,
+    validate: {
+      validator(value) {
+        return validator.isEmail(value);
       },
+      message: "You must enter a valid email",
     },
-    password: {
-      type: String,
-      required: [true, "The password field is required."],
-      select: false, // User's password hash will not be returned by any search queries
-    },
+  },
+  password: {
+    type: String,
+    required: [true, "The password field is required."],
+    select: false, // User's password hash will not be returned by any search queries
   },
 });
 

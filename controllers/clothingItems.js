@@ -1,4 +1,5 @@
 const ClothingItems = require("../models/clothingItems"); // Import the ClothingItems model
+
 const {
   BAD_REQUEST,
   NOT_FOUND,
@@ -14,7 +15,6 @@ const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   const userId = req.user._id; // Access the hardcoded user ID from app.js
 
-  // Create a new item
   ClothingItems.create({
     name,
     weather,
@@ -28,11 +28,11 @@ const createItem = (req, res) => {
     })
     .catch((e) => {
       // if not successful, send an error message
-      console.error(e); // log the error
+      console.error(e);
       if (e.name === "ValidationError") {
         return res
           .status(BAD_REQUEST)
-          .send({ message: "Invalid data provided" }); // Send the 400 error
+          .send({ message: "Invalid data provided" });
       }
       return res
         .status(DEFAULT)
@@ -58,6 +58,7 @@ const deleteItem = (req, res) => {
   const owner = req.user._id; // Get the owner ID from the request user
 
   ClothingItems.findById(itemId)
+    .orFail() // If the item is not found, throw an error to .catch() block
     .then((item) => {
       console.log(item);
       if (String(item.owner) !== owner) {
@@ -76,10 +77,10 @@ const deleteItem = (req, res) => {
     .catch((e) => {
       console.error(e);
       if (e.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: "Item not found" }); // Send the 404 error
+        return res.status(NOT_FOUND).send({ message: "Item not found" });
       }
       if (e.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid ID" }); // Send the 400 error
+        return res.status(BAD_REQUEST).send({ message: "Invalid ID" });
       }
       return res.status(DEFAULT).send({
         message: "An error has occured on the server",
@@ -104,10 +105,10 @@ const likeItem = (req, res) => {
     .catch((e) => {
       console.error(e);
       if (e.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: "Item not found" }); // Send the 404 error
+        return res.status(NOT_FOUND).send({ message: "Item not found" });
       }
       if (e.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid ID" }); // Send the 400 error
+        return res.status(BAD_REQUEST).send({ message: "Invalid ID" });
       }
       return res
         .status(DEFAULT)
@@ -130,10 +131,10 @@ const dislikeItem = (req, res) => {
     .catch((e) => {
       console.error(e);
       if (e.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: "Item not found" }); // Send the 404 error
+        return res.status(NOT_FOUND).send({ message: "Item not found" });
       }
       if (e.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid ID" }); // Send the 400 error
+        return res.status(BAD_REQUEST).send({ message: "Invalid ID" });
       }
       return res
         .status(DEFAULT)

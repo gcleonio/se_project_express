@@ -10,8 +10,6 @@ const {
   dislikeItem,
 } = require("../controllers/clothingItems");
 
-// CRUD : Create, Read, Update, Delete
-
 // Create
 router.post("/", auth, createItem);
 

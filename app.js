@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const mainRouter = require("./routes/index"); // Import the main router
+const mainRouter = require("./routes/index");
 
 const app = express(); // Initialize the Express application
 const { PORT = 3001 } = process.env; // Set the port for the server

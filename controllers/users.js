@@ -9,23 +9,9 @@ const {
   DEFAULT,
   CONFLICT,
   UNAUTHORIZED,
-} = require("../utils/errors"); // Import the error codes
+} = require("../utils/errors");
 
 const { JWT_SECRET } = require("../utils/config"); // Import the JWT secret
-
-// // route handler to returns all users
-// const getUsers = (req, res) => {
-//   User.find({})
-//     .then((users) => {
-//       res.status(200).send(users);
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//       return res
-//         .status(DEFAULT)
-//         .send({ message: "An error has occured on the server" });
-//     });
-// };
 
 // route handler to create a new user
 const createUser = (req, res) => {
@@ -35,7 +21,7 @@ const createUser = (req, res) => {
     .then((hash) => User.create({ name, avatar, email, password: hash })) // create the user with the hashed password
     .then((user) => {
       const responseUser = user.toObject(); // convert the user to a plain object
-      delete responseUser.password; // remove the password from the response object. omit the password hash from the response sent after a new user is created
+      delete responseUser.password; // omit the password hash from the response sent after a new user is created
       res.status(201).send(responseUser); // send the user without the password
     })
     .catch((err) => {
@@ -82,7 +68,7 @@ const getCurrentUser = (req, res) => {
   // const { userId } = req.params;
   const userId = req.user._id; // Instead of pulling the ID from req.params, access it from the req.user object that is set in the auth middleware
   User.findById(userId)
-    .orFail() // must before .then()
+    .orFail()
     .then((user) => res.send(user))
     .catch((err) => {
       console.error(err);
