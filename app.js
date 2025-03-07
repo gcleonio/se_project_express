@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const mainRouter = require("./routes/index");
+const errorHandler = require("./middlewares/error-handler");
 
 const app = express(); // Initialize the Express application
 const { PORT = 3001 } = process.env; // Set the port for the server
@@ -16,6 +17,7 @@ mongoose
 app.use(express.json()); // Middleware to parse JSON bodies. place before calling routes
 app.use(cors());
 app.use("/", mainRouter); // Use the main router for all routes
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

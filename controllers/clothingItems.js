@@ -8,7 +8,7 @@ const {
 } = require("../utils/errors"); // Import the error codes
 
 // route handler to create a new item
-const createItem = (req, res) => {
+const createItem = (req, res, next) => {
   console.log(req);
   console.log(req.body);
 
@@ -34,26 +34,22 @@ const createItem = (req, res) => {
           .status(BAD_REQUEST)
           .send({ message: "Invalid data provided" });
       }
-      return res
-        .status(DEFAULT)
-        .send({ message: "An error has occured on the server" });
+      next(e);
     });
 };
 
 // route handler to get all items
-const getItems = (req, res) => {
+const getItems = (req, res, next) => {
   ClothingItems.find({})
     .then((items) => res.send(items))
     .catch((e) => {
       console.error(e);
-      res
-        .status(DEFAULT)
-        .send({ message: "An error has occured on the server" });
+      next(e);
     });
 };
 
 // route handler to delete an item
-const deleteItem = (req, res) => {
+const deleteItem = (req, res, next) => {
   const { itemId } = req.params; // Get the item ID from the request parameters
   const owner = req.user._id; // Get the owner ID from the request user
 
@@ -82,14 +78,12 @@ const deleteItem = (req, res) => {
       if (e.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: "Invalid ID" });
       }
-      return res.status(DEFAULT).send({
-        message: "An error has occured on the server",
-      });
+      next(e);
     });
 };
 
 // Like an item by ID
-const likeItem = (req, res) => {
+const likeItem = (req, res, next) => {
   const userId = req.user._id; // Access the hardcoded user ID from app.js
 
   ClothingItems.findByIdAndUpdate(
@@ -110,14 +104,12 @@ const likeItem = (req, res) => {
       if (e.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: "Invalid ID" });
       }
-      return res
-        .status(DEFAULT)
-        .send({ message: "An error has occured on the server" });
+      next(e);
     });
 };
 
 // Dislike an item by ID
-const dislikeItem = (req, res) => {
+const dislikeItem = (req, res, next) => {
   ClothingItems.findByIdAndUpdate(
     req.params.itemId,
     { $pull: { likes: req.user._id } }, // Remove _id from the array
@@ -136,9 +128,7 @@ const dislikeItem = (req, res) => {
       if (e.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: "Invalid ID" });
       }
-      return res
-        .status(DEFAULT)
-        .send({ message: "An error has occured on the server" });
+      next(e);
     });
 };
 

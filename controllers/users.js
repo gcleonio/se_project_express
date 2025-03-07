@@ -14,7 +14,7 @@ const {
 const { JWT_SECRET } = require("../utils/config"); // Import the JWT secret
 
 // route handler to create a new user
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email } = req.body;
   bcrypt
     .hash(req.body.password, 12) // hash the password
@@ -32,13 +32,11 @@ const createUser = (req, res) => {
       if (err.code === 11000) {
         return res.status(CONFLICT).send({ message: "Email already exists" });
       }
-      return res
-        .status(DEFAULT)
-        .send({ message: "An error has occured on the server" });
+      next(err);
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   // login function calls User.findUserByCredentials with the provided email and password. If the credentials are correct, it generates a JWT token and sends it in the response
@@ -57,14 +55,12 @@ const login = (req, res) => {
           .status(UNAUTHORIZED)
           .send({ message: "Incorrect email or password" });
       }
-      return res
-        .status(DEFAULT)
-        .send({ message: "An error has occured on the server" });
+      next(err);
     });
 };
 
 // route handler to find the current user
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   // const { userId } = req.params;
   const userId = req.user._id; // Instead of pulling the ID from req.params, access it from the req.user object that is set in the auth middleware
   User.findById(userId)
@@ -78,14 +74,12 @@ const getCurrentUser = (req, res) => {
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: "Invalid ID" });
       }
-      return res
-        .status(DEFAULT)
-        .send({ message: "An error has occured on the server" });
+      next(err);
     });
 };
 
 // route handler to update user data
-const updateProfile = (req, res) => {
+const updateProfile = (req, res, next) => {
   const userId = req.user._id; // access the user ID from req.user
   const { name, avatar } = req.body;
   return User.findByIdAndUpdate(
@@ -103,9 +97,7 @@ const updateProfile = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: "Invalid ID provided" });
       }
-      return res
-        .status(DEFAULT)
-        .send({ message: "An error has occured on the server" });
+      next(err);
     });
 };
 
