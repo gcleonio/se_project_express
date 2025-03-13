@@ -20,6 +20,13 @@ mongoose
 app.use(express.json()); // Middleware to parse JSON bodies. place before calling routes
 app.use(cors());
 app.use(requestLogger); // enable the request logger before all route handlers
+
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
+
 app.use("/", mainRouter); // Use the main router for all routes
 app.use(errorLogger); // enalbe the error logger after the route handlers and before the error handlers
 app.use(errors()); // Celebrate error handler
