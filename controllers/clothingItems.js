@@ -1,11 +1,18 @@
 const ClothingItems = require("../models/clothingItems"); // Import the ClothingItems model
 
+// const {
+//   BAD_REQUEST,
+//   NOT_FOUND,
+//   DEFAULT,
+//   FORBIDDEN,
+// } = require("../utils/errors"); // Import the error codes
 const {
-  BAD_REQUEST,
-  NOT_FOUND,
-  DEFAULT,
-  FORBIDDEN,
-} = require("../utils/errors"); // Import the error codes
+  BadRequestError,
+  NotFoundError,
+  ConflictError,
+  UnauthorizedError,
+  ForbiddenError,
+} = require("../utils/custom-errors");
 
 // route handler to create a new item
 const createItem = (req, res, next) => {
@@ -30,11 +37,10 @@ const createItem = (req, res, next) => {
       // if not successful, send an error message
       console.error(e);
       if (e.name === "ValidationError") {
-        return res
-          .status(BAD_REQUEST)
-          .send({ message: "Invalid data provided" });
+        next(new BadRequestError("Invalid data provided"));
+      } else {
+        next(e);
       }
-      next(e);
     });
 };
 
@@ -59,9 +65,7 @@ const deleteItem = (req, res, next) => {
       console.log(item);
       if (String(item.owner) !== owner) {
         // Check if the owner of the item matches the user making the request
-        return res
-          .status(FORBIDDEN)
-          .send({ message: "You are not authorized to delete the item" });
+        throw new ForbiddenError("You are not authorized to delete this item");
       }
       return item
         .deleteOne() // If the owner matches, delete the item
@@ -73,12 +77,12 @@ const deleteItem = (req, res, next) => {
     .catch((e) => {
       console.error(e);
       if (e.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: "Item not found" });
+        next(new NotFoundError("Item not found"));
+      } else if (e.name === "CastError") {
+        next(new BadRequestError("Invalid ID"));
+      } else {
+        next(e);
       }
-      if (e.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid ID" });
-      }
-      next(e);
     });
 };
 
@@ -99,12 +103,12 @@ const likeItem = (req, res, next) => {
     .catch((e) => {
       console.error(e);
       if (e.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: "Item not found" });
+        next(new NotFoundError("Item not found"));
+      } else if (e.name === "CastError") {
+        next(new BadRequestError("Invalid ID"));
+      } else {
+        next(e);
       }
-      if (e.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid ID" });
-      }
-      next(e);
     });
 };
 
@@ -123,12 +127,12 @@ const dislikeItem = (req, res, next) => {
     .catch((e) => {
       console.error(e);
       if (e.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: "Item not found" });
+        next(new NotFoundError("Item not found"));
+      } else if (e.name === "CastError") {
+        next(new BadRequestError("Invalid ID"));
+      } else {
+        next(e);
       }
-      if (e.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid ID" });
-      }
-      next(e);
     });
 };
 

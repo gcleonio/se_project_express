@@ -3,13 +3,20 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
+// const {
+//   BAD_REQUEST,
+//   NOT_FOUND,
+//   DEFAULT,
+//   CONFLICT,
+//   UNAUTHORIZED,
+// } = require("../utils/errors");
 const {
-  BAD_REQUEST,
-  NOT_FOUND,
-  DEFAULT,
-  CONFLICT,
-  UNAUTHORIZED,
-} = require("../utils/errors");
+  BadRequestError,
+  NotFoundError,
+  ConflictError,
+  UnauthorizedError,
+  ForbiddenError,
+} = require("../utils/custom-errors");
 
 const { JWT_SECRET } = require("../utils/config"); // Import the JWT secret
 
@@ -27,12 +34,13 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       console.error(err); // all catch blocks should log the error
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid ID provided" });
+        next(new BadRequestError("Invalid data provided"));
       }
       if (err.code === 11000) {
-        return res.status(CONFLICT).send({ message: "Email already exists" });
+        next(new ConflictError("Email already in use"));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -51,11 +59,10 @@ const login = (req, res, next) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "UnauthorizedError") {
-        return res
-          .status(UNAUTHORIZED)
-          .send({ message: "Incorrect email or password" });
+        next(new UnauthorizedError("Incorrect email or password"));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -69,12 +76,13 @@ const getCurrentUser = (req, res, next) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: "User not found" });
+        next(new NotFoundError("User not found"));
       }
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid ID" });
+        next(new BadRequestError("Invalid ID provided"));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -92,12 +100,13 @@ const updateProfile = (req, res, next) => {
       // handle rejected state
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: "User not found" });
+        next(new NotFoundError("User not found"));
       }
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid ID provided" });
+        next(new BadRequestError("Invalid data provided"));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
