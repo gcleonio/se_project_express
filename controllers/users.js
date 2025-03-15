@@ -3,20 +3,11 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
-// const {
-//   BAD_REQUEST,
-//   NOT_FOUND,
-//   DEFAULT,
-//   CONFLICT,
-//   UNAUTHORIZED,
-// } = require("../utils/errors");
-const {
-  BadRequestError,
-  NotFoundError,
-  ConflictError,
-  UnauthorizedError,
-  ForbiddenError,
-} = require("../utils/custom-errors");
+
+const BadRequestError = require("../custom_errors/bad-request-err");
+const NotFoundError = require("../custom_errors/not-found-err");
+const ConflictError = require("../custom_errors/conflict-err");
+const UnauthorizedError = require("../custom_errors/unauthorized-err");
 
 const { JWT_SECRET } = require("../utils/config"); // Import the JWT secret
 

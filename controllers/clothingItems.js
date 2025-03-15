@@ -1,18 +1,7 @@
 const ClothingItems = require("../models/clothingItems"); // Import the ClothingItems model
-
-// const {
-//   BAD_REQUEST,
-//   NOT_FOUND,
-//   DEFAULT,
-//   FORBIDDEN,
-// } = require("../utils/errors"); // Import the error codes
-const {
-  BadRequestError,
-  NotFoundError,
-  ConflictError,
-  UnauthorizedError,
-  ForbiddenError,
-} = require("../utils/custom-errors");
+const BadRequestError = require("../custom_errors/bad-request-err");
+const NotFoundError = require("../custom_errors/not-found-err");
+const ForbiddenError = require("../custom_errors/forbidden-err");
 
 // route handler to create a new item
 const createItem = (req, res, next) => {
