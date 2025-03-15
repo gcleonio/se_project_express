@@ -6,6 +6,7 @@ const mainRouter = require("./routes/index");
 const { errors } = require("celebrate");
 const errorHandler = require("./middlewares/error-handler");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
+const { JWT_SECRET } = require("./utils/config");
 
 const app = express(); // Initialize the Express application
 const { PORT = 3001 } = process.env; // Set the port for the server
@@ -34,4 +35,5 @@ app.use(errorHandler); // Centralized error handler
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log(`JWT_SECRET is set to: ${JWT_SECRET}`);
 });
