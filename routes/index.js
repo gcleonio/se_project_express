@@ -16,8 +16,8 @@ router.post("/signin", validateUserLogin, login);
 router.post("/signup", validateUserInfo, createUser);
 
 // Handle 404 errors for any undefined routes
-router.use((req, res) => {
-  throw new NotFoundError("Router not found");
+router.use((req, res, next) => {
+  next(new NotFoundError("Router not found"));
 });
 
 module.exports = router;
