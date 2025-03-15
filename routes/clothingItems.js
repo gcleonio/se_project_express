@@ -1,5 +1,4 @@
 const router = require("express").Router();
-
 const auth = require("../middlewares/auth"); // Import the auth middleware
 
 const {
@@ -9,20 +8,25 @@ const {
   likeItem,
   dislikeItem,
 } = require("../controllers/clothingItems");
+const { validateCardBody, validateID } = require("../middlewares/validation");
 
-// Create
-router.post("/", auth, createItem);
-
-// Read
+// get all items
 router.get("/", getItems);
 
-// Delete
-router.delete("/:itemId", auth, deleteItem);
+// protect routes
+router.use(auth);
 
-// Like an item by ID
-router.put("/:itemId/likes", auth, likeItem);
+// protected routes:
+// create a new item
+router.post("/", validateCardBody, createItem);
 
-// Unlike an item by ID
-router.delete("/:itemId/likes", auth, dislikeItem);
+// delete an item by ID
+router.delete("/:itemId", validateID, deleteItem);
+
+// like an item by ID
+router.put("/:itemId/likes", validateID, likeItem);
+
+// unlike an item by ID
+router.delete("/:itemId/likes", validateID, dislikeItem);
 
 module.exports = router;
