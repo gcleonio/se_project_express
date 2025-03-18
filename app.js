@@ -29,7 +29,7 @@ app.get("/crash-test", () => {
 });
 
 app.use("/", mainRouter); // Use the main router for all routes
-app.use(errorLogger); // enalbe the error logger after the route handlers and before the error handlers
+app.use(errorLogger); // enable the error logger after the route handlers and before the error handlers
 app.use(errors()); // Celebrate error handler
 app.use(errorHandler); // Centralized error handler
 

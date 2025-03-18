@@ -16,6 +16,9 @@ Key Features
 - RESTful API:
   The backend exposes a RESTful API to manage users, clothing items, and likes.
 
+- Input Validation
+  Validation mechanisms ensure that all input data is correctly formatted and secure. This includes validation for email, password, and URL fields.
+
 ## Technologies Used
 
 Frontend:
@@ -30,12 +33,15 @@ Backend:
 - MongoDB with Mongoose: For schema-based document storage.
 - Validator: To validate input fields like URLs.
 - RESTful API: Provides endpoints for managing users, clothing items, and likes.
+- bcrypt: For securely hashing user passwords.
+- jsonwebtoken (JWT): For authorizing users.
 
 Development Tools & Techniques:
 
 - ESLint & Prettier: Code linting and formatting (Airbnb Style Guide).
 - Nodemon: Enables hot reload for backend development.
 - Error Handling: Ensures proper status codes and messages for validation and server errors.
+- Middleware: Authentication middleware secures routes, ensuring only authorized users can access protected endpoints.
 
 ## Running the Project
 
@@ -43,8 +49,6 @@ Development Tools & Techniques:
 
 `npm run dev` — to launch the server with the hot reload feature
 
-### Testing
+### Domain Name
 
-Before committing your code, make sure you edit the file `sprint.txt` in the root folder. The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 12
-
-### Homepage (https://wtwr.rainbowcup.com)
+https://wtwr.rainbowcup.com
