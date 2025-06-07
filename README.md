@@ -1,8 +1,8 @@
 # WTWR (What to Wear?): Back End
 
-WTWR (What to Wear?) is a full-stack web application designed to help users decide which clothing items to wear based on current weather conditions. The project integrates a React-based frontend with a Node.js/Express.js backend connected to a MongoDB database. It uses the Weather API to provide weather-based recommendations, delivering a dynamic and personalized user experience.
+WTWR (What to Wear?) is a full-stack web application designed to help users decide which clothing items to wear based on current weather conditions. The project integrates a React-based frontend with a Node.js/Express.js backend connected to a MongoDB database. It uses the [Weather API](https://openweathermap.org/current#one) to provide weather-based recommendations, delivering a dynamic and personalized user experience.
 
-Key Features
+### Key Features
 
 - Add and Manage Clothing Items:
   Users can add new clothing items, including details such as the name, an image, and the weather conditions that the item is suitable for (hot, warm, cold).
@@ -49,6 +49,10 @@ Development Tools & Techniques:
 
 `npm run dev` — to launch the server with the hot reload feature
 
-### Domain Name
+### Links
 
-https://wtwr.rainbowcup.com
+Project link: https://wtwr.rainbowcup.com
+
+Deployed Backend: https://api.wtwr.rainbowcup.com/
+
+Frontend Repo: https://github.com/gcleonio/se_project_react
