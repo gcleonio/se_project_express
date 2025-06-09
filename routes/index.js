@@ -9,11 +9,13 @@ const {
   validateUserLogin,
 } = require("../middlewares/validation");
 
-router.use("/users", userRouter);
-router.use("/items", clothingItemsRouter);
-
+// Public routes
 router.post("/signin", validateUserLogin, login);
 router.post("/signup", validateUserInfo, createUser);
+
+// Protected routes
+router.use("/users", userRouter);
+router.use("/items", clothingItemsRouter);
 
 // Handle 404 errors for any undefined routes
 router.use((req, res, next) => {
