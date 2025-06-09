@@ -11,6 +11,14 @@ const { JWT_SECRET } = require("./utils/config");
 const app = express(); // Initialize the Express application
 const { PORT = 3001 } = process.env; // Set the port for the server
 
+// Test-only middleware for CI
+if (process.env.NODE_ENV === "test") {
+  app.use((req, res, next) => {
+    req.user = { _id: "5d8b8592978f8bd833ca8133" };
+    next();
+  });
+}
+
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
   .then(() => {
