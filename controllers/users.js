@@ -60,7 +60,7 @@ const login = (req, res, next) => {
 // route handler to find the current user
 const getCurrentUser = (req, res, next) => {
   // const { userId } = req.params;
-  const userId = req.user._id; // Instead of pulling the ID from req.params, access it from the req.user object that is set in the auth middleware
+  const userId = req.user?._id; // Instead of pulling the ID from req.params, access it from the req.user object that is set in the auth middleware
   User.findById(userId)
     .orFail()
     .then((user) => res.send(user))
@@ -79,7 +79,7 @@ const getCurrentUser = (req, res, next) => {
 
 // route handler to update user data
 const updateProfile = (req, res, next) => {
-  const userId = req.user._id; // access the user ID from req.user
+  const userId = req.user?._id; // access the user ID from req.user
   const { name, avatar } = req.body;
   return User.findByIdAndUpdate(
     userId,

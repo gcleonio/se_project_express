@@ -9,7 +9,7 @@ const createItem = (req, res, next) => {
   console.log(req.body);
 
   const { name, weather, imageUrl } = req.body;
-  const userId = req.user._id; // Access the hardcoded user ID from app.js
+  const userId = req.user?._id; // Access the hardcoded user ID from app.js
 
   ClothingItems.create({
     name,
@@ -46,7 +46,7 @@ const getItems = (req, res, next) => {
 // route handler to delete an item
 const deleteItem = (req, res, next) => {
   const { itemId } = req.params; // Get the item ID from the request parameters
-  const owner = req.user._id; // Get the owner ID from the request user
+  const owner = req.user?._id; // Get the owner ID from the request user
 
   ClothingItems.findById(itemId)
     .orFail() // If the item is not found, throw an error to .catch() block
@@ -77,7 +77,7 @@ const deleteItem = (req, res, next) => {
 
 // Like an item by ID
 const likeItem = (req, res, next) => {
-  const userId = req.user._id; // Access the hardcoded user ID from app.js
+  const userId = req.user?._id; // Access the hardcoded user ID from app.js
 
   ClothingItems.findByIdAndUpdate(
     req.params.itemId,
@@ -105,7 +105,7 @@ const likeItem = (req, res, next) => {
 const dislikeItem = (req, res, next) => {
   ClothingItems.findByIdAndUpdate(
     req.params.itemId,
-    { $pull: { likes: req.user._id } }, // Remove _id from the array
+    { $pull: { likes: req.user?._id } }, // Remove _id from the array
     { new: true }
   )
     .orFail()
